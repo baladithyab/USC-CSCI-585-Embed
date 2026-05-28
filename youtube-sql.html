@@ -208,21 +208,10 @@
       const status = $('status')
       const results = $('results')
 
-      let db
-      try {
-        status.textContent = 'Booting PGlite…'
-        db = new PGlite()
-        await db.waitReady
-        status.textContent = 'PGlite ready · seeding…'
-        await seedDatabase()
-        status.textContent = 'Ready'
-      } catch (err) {
-        status.textContent = 'PGlite failed to boot'
-        results.innerHTML = `<div class="err">${err.message}\n${err.stack || ''}</div>`
-        $('run-btn').disabled = true
-      }
-
       // Schema + sample data are baked in to keep the embed self-contained.
+      // Declared BEFORE the top-level await/boot block so seedDatabase()
+      // doesn't hit a TDZ "Cannot access 'SCHEMA' before initialization"
+      // error (const declarations don't hoist their values).
       const SCHEMA = `
         CREATE TABLE users (
           user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -473,6 +462,26 @@ ORDER BY relname;`,
           DROP TABLE IF EXISTS sponsored_videos, comments, video_statistics, videos, subscriptions, channels, sponsors, users CASCADE;
         `)
         await seedDatabase()
+      }
+
+      // Boot block — runs after all const declarations + seedDatabase have
+      // been initialised. Originally lived at the top of the module body
+      // but tripped a TDZ error because const SCHEMA/SEED weren't yet in
+      // their initialised state when seedDatabase() referenced them.
+      // `db` is declared at module scope so runSql / clearAndReseed (defined
+      // both above and below) can read it.
+      let db = null
+      try {
+        status.textContent = 'Booting PGlite…'
+        db = new PGlite()
+        await db.waitReady
+        status.textContent = 'PGlite ready · seeding…'
+        await seedDatabase()
+        status.textContent = 'Ready'
+      } catch (err) {
+        status.textContent = 'PGlite failed to boot'
+        results.innerHTML = `<div class="err">${err.message}\n${err.stack || ''}</div>`
+        $('run-btn').disabled = true
       }
 
       function renderResult(rows, fields) {
