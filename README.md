@@ -1,27 +1,13 @@
-# USC CSCI 585 — Database Systems (Spring 2023)
+# ⚠️ Archived — content merged into source repo
 
-Interactive demos of selected homeworks from Yan Liu's CSCI 585.
-Spatial queries on a Bay Area photo dataset, plus a YouTube-like
-relational schema running on PGlite (real Postgres in the browser).
+This repo's contents (`spatial-queries.html`, `youtube-sql.html`) have been merged into the original CSCI 585 source repo:
 
-Embeds via codeseys.io's project-embed pipeline. See `web.codeseys.json`.
+→ **[baladithyab/USC_CSCI585_Spring23/embeds/](https://github.com/baladithyab/USC_CSCI585_Spring23/tree/master/embeds)**
 
-## Original source
+The `web.codeseys.json` manifest now lives at the source repo's root, and the build workflow runs from there. The personal-site discovery script picks it up via the `codeseys-embed` topic.
 
-[baladithyab/USC_CSCI585_Spring23](https://github.com/baladithyab/USC_CSCI585_Spring23)
-holds the original SQL + PostGIS + Python — this repo is the
-visualization layer.
+Live demos: [codeseys.io/projects/csci-585](https://codeseys.io/projects/csci-585)
 
-## Demos
+This repo is kept read-only as historical reference. Do not push new commits.
 
-- **HW2 — YouTube SQL Schema**: 7 tables (users, channels, videos,
-  comments, etc.) with FK constraints. Six original queries run live
-  against a PGlite-WASM Postgres in the browser.
-- **HW3 — Bay Area Photo Spatial Queries**: 13 geotagged Bay Area
-  photos plotted on a map. Toggle convex hull, 4-nearest-neighbor
-  search from a clicked point, density coloring. All client-side
-  (turf.js + maplibre-gl).
-
-## License
-
-MIT.
+> **Note:** The original source repo was scrubbed via `git filter-repo` on 2026-05-28 to remove a leaked Mongo Atlas URI and Supabase Postgres password before being made public. See the [audit notes](https://github.com/baladithyab/USC_CSCI585_Spring23/blob/master/HWs/HW3/spatialdbqueries.py) inside the source.
